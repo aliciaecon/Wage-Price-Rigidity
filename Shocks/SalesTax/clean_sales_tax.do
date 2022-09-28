@@ -110,6 +110,16 @@ foreach s in 2004 2003 2000{
 	clear
 }
 
+* Create new dta file from the missing data
+import excel using MissingData/MissingData.xlsx, firstrow case(lower)
+* Clean up some missing values
+replace sales_trate = "0" if regexm(sales_trate, "[a-zA-Z ]+")
+replace food_exempt = "" if food_exempt == "*"
+replace prescrip_exempt = "" if prescrip_exempt == "*" 
+replace nonprescrip_exempt = "" if nonprescrip_exempt == "*" 
+save salestaxdta/missing_salestax.dta, replace
+clear
+
 
 * Merge 2000-2022 data (missing years 2009, 2005, 2002, 2001)
 append using salestaxdta/2000salestax.dta salestaxdta/2003salestax.dta
@@ -120,6 +130,7 @@ forvalues i = 2006/2008{
 forvalues i = 2010/2022{
 	append using salestaxdta/`i'salestax.dta 
 }
+append using salestaxdta/missing_salestax.dta
 * Clean up state names
 gen state_new = strtrim(regexs(0)) if regexm(state, "[a-zA-Z ]+")
 drop state
