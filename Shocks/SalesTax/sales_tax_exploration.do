@@ -78,5 +78,5 @@ eststo: xtreg avg_pi change_up change_down, fe
 eststo: xtreg avg_pi_t change_up change_down, fe
 eststo: xtreg avg_pi_nt change_up change_down, fe
 
-* esttab using inflation_changes
+* esttab using plots/inflation_changes
 

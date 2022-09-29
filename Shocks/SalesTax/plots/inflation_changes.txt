@@ -1,3 +1,9 @@
+This table shows regression results from regressing average inflation on the tax change percent (tax_change)
+as well as an indicator on whether there was an upward (change_up) or downward (change_down) tax change
+between 2000-2022. The inflation metrics are taken from Joe's paper on state-level inflation and averaged
+within years (as tax change data is annual).
+
+
 ------------------------------------------------------------------------------------------------------------
                       (1)             (2)             (3)             (4)             (5)             (6)   
                    avg_pi        avg_pi_t       avg_pi_nt          avg_pi        avg_pi_t       avg_pi_nt   
