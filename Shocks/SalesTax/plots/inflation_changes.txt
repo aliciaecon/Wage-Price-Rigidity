@@ -1,27 +1,24 @@
+
 This table shows regression results from regressing average inflation on the tax change percent (tax_change)
 as well as an indicator on whether there was an upward (change_up) or downward (change_down) tax change
 between 2000-2022. The inflation metrics are taken from Joe's paper on state-level inflation and averaged
 within years (as tax change data is annual). Year and state fixed effects are included.
-
 
 ------------------------------------------------------------------------------------------------------------
                       (1)             (2)             (3)             (4)             (5)             (6)   
                    avg_pi        avg_pi_t       avg_pi_nt          avg_pi        avg_pi_t       avg_pi_nt   
 ------------------------------------------------------------------------------------------------------------
 tax_change          0.363           0.290           0.434                                                   
-                   (1.92)          (1.59)          (1.63)                                                   
+                   (1.76)          (1.12)          (1.68)                                                   
 
-change_up                                                           0.293           0.381*          0.241   
-                                                                   (1.69)          (2.26)          (0.98)   
+change_up                                                           0.293           0.381           0.241   
+                                                                   (1.61)          (1.72)          (1.03)   
 
-change_down                                                        -0.608*         -0.287          -0.799*  
-                                                                  (-2.41)         (-1.16)         (-2.24)   
-
-2000.year                                                               0               0               0   
-                                                                      (.)             (.)             (.)   
+change_down                                                        -0.608***       -0.287          -0.799** 
+                                                                  (-3.75)         (-0.74)         (-3.61)   
 
 _cons               2.811***        1.233***        3.785***        2.622***        2.051***        2.908***
-                  (18.98)          (8.64)         (18.08)         (11.60)          (9.27)          (9.08)   
+                  (20.40)          (9.23)         (17.25)         (11.77)          (8.00)         (10.49)   
 ------------------------------------------------------------------------------------------------------------
 N                     578             578             578             612             612             612   
 ------------------------------------------------------------------------------------------------------------

@@ -69,14 +69,14 @@ encode state, gen(state_code)
 xtset state_code year
 
 * Regress on percent of tax change
-eststo: xtreg avg_pi tax_change i.year, fe
-eststo: xtreg avg_pi_t tax_change i.year, fe
-eststo: xtreg avg_pi_nt tax_change i.year, fe
+eststo: xtreg avg_pi tax_change i.year, fe robust
+eststo: xtreg avg_pi_t tax_change i.year, fe robust
+eststo: xtreg avg_pi_nt tax_change i.year, fe robust
 
 * Regress on changes up and down
-eststo: xtreg avg_pi change_up change_down i.year, fe
-eststo: xtreg avg_pi_t change_up change_down i.year, fe
-eststo: xtreg avg_pi_nt change_up change_down i.year, fe
+eststo: xtreg avg_pi change_up change_down i.year, fe robust
+eststo: xtreg avg_pi_t change_up change_down i.year, fe robust
+eststo: xtreg avg_pi_nt change_up change_down i.year, fe robust
 
 * esttab using plots/inflation_changes, replace
 
