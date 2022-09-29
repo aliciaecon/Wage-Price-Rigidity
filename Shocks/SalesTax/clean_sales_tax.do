@@ -2,7 +2,7 @@
 clear all
 
 forvalues s = 2021/2022{
-	import excel using state_sales_tax_4.xlsx, sheet("`s'") cellrange(B9)
+	import excel using original_data/state_sales_tax_4.xlsx, sheet("`s'") cellrange(B9)
 	drop C E G I
 	rename B state
 	rename D sales_trate
@@ -16,7 +16,7 @@ forvalues s = 2021/2022{
 }
 
 forvalues s = 2013/2020{
-	import excel using state_sales_tax_4.xlsx, sheet("`s'") cellrange(A9)
+	import excel using original_data/state_sales_tax_4.xlsx, sheet("`s'") cellrange(A9)
 	drop B D F H
 	rename A state
 	rename C sales_trate
@@ -29,7 +29,7 @@ forvalues s = 2013/2020{
 	clear
 }
 
-import excel using state_sales_tax_4.xlsx, sheet("2012") cellrange(A8)
+import excel using original_data/state_sales_tax_4.xlsx, sheet("2012") cellrange(A8)
 rename A state
 rename B sales_trate
 rename C food_exempt
@@ -40,7 +40,7 @@ gen year = 2012
 save salestaxdta/2012salestax.dta, replace
 clear
 
-import excel using state_sales_tax_4.xlsx, sheet("2011") cellrange(A7)
+import excel using original_data/state_sales_tax_4.xlsx, sheet("2011") cellrange(A7)
 rename A state
 rename B sales_trate
 rename C food_exempt
@@ -52,7 +52,7 @@ save salestaxdta/2011salestax.dta, replace
 clear
 
 foreach s in 2010 2008 2007{
-	import excel using state_sales_tax_4.xlsx, sheet("`s'") cellrange(A6)
+	import excel using original_data/state_sales_tax_4.xlsx, sheet("`s'") cellrange(A6)
 	rename A state
 	rename B sales_trate
 	rename C food_exempt
@@ -64,7 +64,7 @@ foreach s in 2010 2008 2007{
 	clear
 }
 
-import excel using state_sales_tax_4.xlsx, sheet("2006") cellrange(A11)
+import excel using original_data/state_sales_tax_4.xlsx, sheet("2006") cellrange(A11)
 rename A state
 rename B sales_trate
 rename C food_exempt
@@ -77,7 +77,7 @@ clear
 
 * Note: Slightly different variables for pre-2006 years
 foreach s in 2004 2003 2000{
-	import excel using state_sales_tax_4.xlsx, sheet("`s'") cellrange(A7:E53)
+	import excel using original_data/state_sales_tax_4.xlsx, sheet("`s'") cellrange(A7:E53)
 	rename A state
 	rename B food_exempt
 	rename C sales_trate
@@ -111,12 +111,14 @@ foreach s in 2004 2003 2000{
 }
 
 * Create new dta file from the missing data
-import excel using MissingData/MissingData.xlsx, firstrow case(lower)
+import excel using missing_data/MissingData.xlsx, firstrow case(lower)
 * Clean up some missing values
-replace sales_trate = "0" if regexm(sales_trate, "[a-zA-Z ]+")
-replace food_exempt = "" if food_exempt == "*"
-replace prescrip_exempt = "" if prescrip_exempt == "*" 
-replace nonprescrip_exempt = "" if nonprescrip_exempt == "*" 
+replace food_exempt = "Exempt" if food_exempt == "*"
+replace food_exempt = "Taxable" if food_exempt == ""
+replace prescrip_exempt = "Exempt" if prescrip_exempt == "*" 
+replace prescrip_exempt = "Taxable" if prescrip_exempt == "" 
+replace nonprescrip_exempt = "Exempt" if nonprescrip_exempt == "*" 
+replace nonprescrip_exempt = "Taxable" if nonprescrip_exempt == "" 
 save salestaxdta/missing_salestax.dta, replace
 clear
 
@@ -135,11 +137,26 @@ append using salestaxdta/missing_salestax.dta
 gen state_new = strtrim(regexs(0)) if regexm(state, "[a-zA-Z ]+")
 drop state
 rename state_new state
+replace state = "District of Columbia" if state == "District Of Columbia"
 * Clean up 0s for the state tax rate
+replace sales_trate = word(sales_trate, 1)
 replace sales_trate = "0" if regexm(sales_trate, "[a-zA-Z ]+")
 replace sales_trate = "0" if regexm(sales_trate, "-")
 destring sales_trate, replace
-save mergeddta/2000-2022salestax.dta, replace
+
+* Fix some California and Virginia rates for consistency; add in 
+* state-wide local tax
+replace sales_trate = sales_trate + 1 if state == "Virginia" & year == 2000
+replace sales_trate = sales_trate + 1 if state == "Virginia" & year == 2003
+replace sales_trate = sales_trate + 1 if state == "Virginia" & year == 2004
+replace sales_trate = sales_trate + 1 if state == "Virginia" & year == 2006
+replace sales_trate = sales_trate + 1.25 if state == "California" & year == 2000
+replace sales_trate = sales_trate + 1.25 if state == "California" & year == 2003
+replace sales_trate = sales_trate + 1.25 if state == "California" & year == 2004
+replace sales_trate = sales_trate + 1 if state == "California" & year == 2006
+
+
+save merged_data/2000-2022salestax.dta, replace
 
 
 
